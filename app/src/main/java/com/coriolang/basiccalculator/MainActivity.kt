@@ -13,6 +13,10 @@ class MainActivity : AppCompatActivity() {
 
         val editText = findViewById<EditText>(R.id.editText)
 
+        var firstOperand = 0.0
+        var secondOperand = 0.0
+        var operation = Operation.NONE
+
         findViewById<Button>(R.id.button0).setOnClickListener {
             appendNumber('0', editText)
         }
@@ -58,6 +62,10 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (editText.text.toString() == "-") {
+                editText.text.append('0')
+            }
+
             editText.text.append('.')
         }
 
@@ -65,11 +73,72 @@ class MainActivity : AppCompatActivity() {
             editText.text.clear()
             editText.text.append('0')
         }
+
+        findViewById<Button>(R.id.addButton).setOnClickListener {
+            firstOperand = editText.text.toString().toDouble()
+            operation = Operation.ADD
+
+            editText.text.clear()
+            editText.text.append('0')
+        }
+
+        findViewById<Button>(R.id.subtractButton).setOnClickListener {
+            if (editText.text.toString() == "0") {
+                editText.text.clear()
+                editText.text.append('-')
+
+                return@setOnClickListener
+            }
+
+            firstOperand = editText.text.toString().toDouble()
+            operation = Operation.SUBTRACT
+
+            editText.text.clear()
+            editText.text.append('0')
+        }
+
+        findViewById<Button>(R.id.multiplyButton).setOnClickListener {
+            firstOperand = editText.text.toString().toDouble()
+            operation = Operation.MULTIPLY
+
+            editText.text.clear()
+            editText.text.append('0')
+        }
+
+        findViewById<Button>(R.id.divideButton).setOnClickListener {
+            firstOperand = editText.text.toString().toDouble()
+            operation = Operation.DIVIDE
+
+            editText.text.clear()
+            editText.text.append('0')
+        }
+
+        findViewById<Button>(R.id.equalButton).setOnClickListener {
+            secondOperand = editText.text.toString().toDouble()
+
+            val result = when (operation) {
+                Operation.ADD -> firstOperand + secondOperand
+                Operation.SUBTRACT -> firstOperand - secondOperand
+                Operation.MULTIPLY -> firstOperand * secondOperand
+                Operation.DIVIDE -> firstOperand / secondOperand
+                Operation.NONE -> return@setOnClickListener
+            }
+
+            operation = Operation.NONE
+
+            editText.text.clear()
+            editText.text.append(result.toString())
+        }
     }
 
     private fun appendNumber(symbol: Char, editText: EditText) {
-        if (editText.text.contains("0") && editText.text.length == 1) {
+        if (editText.text.toString() == "0") {
             editText.text.clear()
+        }
+
+        if (editText.text.toString() == "-0") {
+            editText.text.clear()
+            editText.text.append("-")
         }
 
         editText.text.append(symbol)
