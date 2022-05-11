@@ -7,15 +7,16 @@ import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
 
+    private var firstOperand = 0.0
+    private var secondOperand = 0.0
+
+    private var operation = Operation.NONE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val editText = findViewById<EditText>(R.id.editText)
-
-        var firstOperand = 0.0
-        var secondOperand = 0.0
-        var operation = Operation.NONE
 
         findViewById<Button>(R.id.button0).setOnClickListener {
             appendNumber('0', editText)
@@ -72,14 +73,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.clearButton).setOnClickListener {
             editText.text.clear()
             editText.text.append('0')
+            editText.hint = "0"
         }
 
         findViewById<Button>(R.id.addButton).setOnClickListener {
-            firstOperand = editText.text.toString().toDouble()
             operation = Operation.ADD
-
-            editText.text.clear()
-            editText.text.append('0')
+            operationButtonPressed(editText)
         }
 
         findViewById<Button>(R.id.subtractButton).setOnClickListener {
@@ -90,27 +89,18 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            firstOperand = editText.text.toString().toDouble()
             operation = Operation.SUBTRACT
-
-            editText.text.clear()
-            editText.text.append('0')
+            operationButtonPressed(editText)
         }
 
         findViewById<Button>(R.id.multiplyButton).setOnClickListener {
-            firstOperand = editText.text.toString().toDouble()
             operation = Operation.MULTIPLY
-
-            editText.text.clear()
-            editText.text.append('0')
+            operationButtonPressed(editText)
         }
 
         findViewById<Button>(R.id.divideButton).setOnClickListener {
-            firstOperand = editText.text.toString().toDouble()
             operation = Operation.DIVIDE
-
-            editText.text.clear()
-            editText.text.append('0')
+            operationButtonPressed(editText)
         }
 
         findViewById<Button>(R.id.equalButton).setOnClickListener {
@@ -127,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             operation = Operation.NONE
 
             editText.text.clear()
-            editText.text.append(result.toString())
+            editText.text.append(removeDotZero(result))
         }
     }
 
@@ -142,5 +132,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         editText.text.append(symbol)
+    }
+
+    private fun removeDotZero(number: Double): String {
+        return if (number - number.toInt() == 0.0) {
+            number.toInt()
+        } else {
+            number
+        }.toString()
+    }
+
+    private fun operationButtonPressed(editText: EditText) {
+        firstOperand = editText.text.toString().toDouble()
+
+        editText.text.clear()
+        editText.hint = removeDotZero(firstOperand)
     }
 }
