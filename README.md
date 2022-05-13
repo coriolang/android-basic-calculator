@@ -1,4 +1,4 @@
-# Project: Pawns-Only Chess
+# Project: Basic Calculator
 First Glance at Android Project  
 Challenging Difficulty  
 
